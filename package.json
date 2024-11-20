@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "build": "tsc && node src/index.js"
+    "build": "nodemon src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
