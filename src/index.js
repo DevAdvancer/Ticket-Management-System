@@ -50,14 +50,8 @@ app.use(session({
 app.use('/api/auth', authRoutes);
 app.use('/api/tickets', ticketRoutes);
 
-// Serve index.html for authenticated users or redirect to external site
+// Serve index.html for all other routes
 app.get('*', (req, res) => {
-  // Example: If the user is not authenticated, redirect them to the external ticket management system
-  if (!req.session.user) {
-    return res.redirect('https://ticket-management-system-gilt.vercel.app/');
-  }
-
-  // If user is authenticated, serve the index.html
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
