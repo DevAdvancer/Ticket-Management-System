@@ -35,7 +35,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ 
+  store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
     ttl: 24 * 60 * 60 // Session TTL (1 day)
   }),
@@ -50,8 +50,14 @@ app.use(session({
 app.use('/api/auth', authRoutes);
 app.use('/api/tickets', ticketRoutes);
 
-// Serve index.html for all other routes
+// Serve index.html for authenticated users or redirect to external site
 app.get('*', (req, res) => {
+  // Example: If the user is not authenticated, redirect them to the external ticket management system
+  if (!req.session.user) {
+    return res.redirect('https://ticket-management-system-gilt.vercel.app/');
+  }
+
+  // If user is authenticated, serve the index.html
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -66,7 +72,7 @@ async function createAdminUser() {
   try {
     const User = mongoose.model('User');
     const adminExists = await User.findOne({ username: 'admin' });
-    
+
     if (!adminExists) {
       const admin = new User({
         username: 'admin',
